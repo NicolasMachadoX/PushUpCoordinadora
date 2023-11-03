@@ -7,10 +7,9 @@ class Server{
 
     constructor(){
          this.app = express();
-         this.port = proces.env.PORT;
+         this.port = process.env.PORT;
 
          this.paths = {
-            
             camion: '/api/camion',
             ciudad: '/api/ciudad',
             envio: '/api/envio',
@@ -19,10 +18,12 @@ class Server{
             pais: '/api/pais',
             paquete: '/api/paquete',
             sucursal:'/api/sucursal',
-            vendedor: '/api/vendedor'
+            vendedor: '/api/vendedor',
+            usuario: '/api/usuario'
          }
-
          this.middlewares();
+
+         this.routes();
 
          this.ConexionDB();
 
@@ -33,13 +34,24 @@ class Server{
     }
 
     routes(){
-
+        this.app.use(this.paths.camion, require('../routes/camion.routes'));
+        this.app.use(this.paths.ciudad, require('../routes/ciudad.routes'));
+        this.app.use(this.paths.envio, require('../routes/envio.routes'));
+        this.app.use(this.paths.estado, require('../routes/estado.routes'));
+        this.app.use(this.paths.factura, require('../routes/factura.routes'));
+        this.app.use(this.paths.pais, require('../routes/pais.routes'));
+        this.app.use(this.paths.paquete, require('../routes/paquete.routes'));
+        this.app.use(this.paths.sucursal, require('../routes/sucursal.routes'));
+        this.app.use(this.paths.vendedor, require('../routes/vendedor.routes'));
+        this.app.use(this.paths.usuario, require('../routes/usuario.routes'));
     }
 
     middlewares(){
-        this.app.use(this.app.morgan('dev'));
+        this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended:false}));
+        this.app.use(morgan('dev'));
+       
     }
 
     listen(){
